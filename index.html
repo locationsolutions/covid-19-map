@@ -15,6 +15,13 @@
             bottom: 0;
             left: 0;
         }
+        form#slider-form {
+            display: block;
+        }
+        input#slider {
+            width: 100%;
+            max-width: 500px;
+        }
     </style>
 </head>
 
@@ -108,7 +115,8 @@
                 .data(f.features)
                     .enter().append("path")
                     .attr("d", path)
-                    .attr("fill", '#500');
+                    .attr("fill", '#ddd')
+                    .attr("stroke", '#fff');
 
             function update(time) {
                 const vis = transform(corona, time);
@@ -132,7 +140,8 @@
                             .append("circle")
                             .attr("cx", d => projection(d.feature.properties.center)[0])
                             .attr("cy", d => projection(d.feature.properties.center)[1])
-                            .attr("r", d => circleScale(d.cases.length));
+                            .attr("r", d => circleScale(d.cases.length))
+                            .attr('fill', 'rgba(153,31,61, 0.9)');
                         
                     },
                     update => {
