@@ -6,13 +6,27 @@
     <title>Koronakartta</title>
     <script src="https://d3js.org/d3.v5.min.js"></script>
     <script src="https://d3js.org/topojson.v2.min.js"></script>
+    <style>
+        #map-wrap {
+            position: relative;
+        }
+        span#date {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+        }
+    </style>
 </head>
 
 <body>
-    <div><svg id="map">
-        <g class="districts"></g>
-        <g class="centers"></g>
-    </svg></div>
+    <div id="map-wrap">
+        <svg id="map">
+            <g class="districts"></g>
+            <g class="centers"></g>
+        </svg>
+        <span id="date"></span>
+    </div>
+    <form id="slider-form"><input type="range" id="slider" name="points" min="0" max="100" value="0"></form>
     <script>
 
         function transform (data, before = '3000') {
@@ -55,7 +69,7 @@
             }
         }
 
-        const width = 960;
+        const width = 500;
         const height = 500;
         
         const svg = d3.select("svg#map")
@@ -76,7 +90,11 @@
             const topo = responses[0];
             const corona = responses[1];
 
-            const timeExtent = d3.extent(corona.confirmed.map(c => c.date));
+            const timeExtent = ['2020-02-26T10:17:15.000Z', d3.max(corona.confirmed, c => c.date)];
+            const timeScale = d3.scaleTime()
+                .domain(timeExtent.map(t => new Date(t)))
+                .range([0, 100]);
+
             const allTime = transform(corona);
 
             const circleScale = d3.scalePow().exponent(0.5)
@@ -124,9 +142,35 @@
             }
 
             
+            const slider = document.getElementById('slider');
+            const form = document.getElementById('slider-form');
+            const dateSpan = document.getElementById('date');
 
-            update('2030-03-09');
+            function fromSlider() {
+                const date = timeScale.invert(slider.value);
+                dateSpan.innerText = date.toISOString().slice(0, 10);
+                update(date.toISOString());
+            }
 
+            form.addEventListener('input', function() {
+                fromSlider();
+            }, true);
+
+            function startAnim() {
+                const ref = setInterval(() => {
+                    const newValue = Math.min(Number(slider.value) + 10, 100);
+                    if (newValue === 100) {
+                        clearInterval(ref);
+                    }
+                    slider.value = newValue;
+                    fromSlider();
+                }, 1000);
+            }
+
+            
+
+            fromSlider();
+            startAnim();
         });
 
 
