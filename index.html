@@ -15,11 +15,13 @@
     </svg></div>
     <script>
 
-        function transform (data, before) {
+        function transform (data, before = '3000') {
             const cases = new Map();
             const districts = new Map();
+
+            const filteredConfirmed = data.confirmed.filter(c => c.date < before);
             
-            data.confirmed.forEach(c => {
+            filteredConfirmed.forEach(c => {
                 cases.set(Number(c.id), c);
 
 
@@ -34,17 +36,17 @@
                 districts.set(c.healthCareDistrict, val);
             });
             const edges = new Map();
-            data.confirmed
-            .filter(c => typeof c.infectionSource === 'number')
-            .forEach(c => {
-                const key = cases.get(c.infectionSource).healthCareDistrict + '%%' + c.healthCareDistrict;
-                let val = edges.get(key);
-                if (!val) {
-                    val = 0;
-                }
-                val++;
-                edges.set(key, val);
-            });
+            filteredConfirmed
+                .filter(c => typeof c.infectionSource === 'number')
+                .forEach(c => {
+                    const key = cases.get(c.infectionSource).healthCareDistrict + '%%' + c.healthCareDistrict;
+                    let val = edges.get(key);
+                    if (!val) {
+                        val = 0;
+                    }
+                    val++;
+                    edges.set(key, val);
+                });
 
             return {
                 cases,
@@ -82,7 +84,7 @@
                 .range([0, 20]);
 
             function update(time) {
-                const vis = transform(corona);
+                const vis = transform(corona, time);
                 
                 const f = topojson.feature(topo, topo.objects.sairaanhoitopiiri);
                 f.features.forEach(f => {
@@ -96,7 +98,7 @@
                 const coronaDistricts = Array.from(vis.districts.values());
 
                 svg.select('g.centers')
-                .selectAll("path")
+                .selectAll("circle")
                 .data(coronaDistricts)
                     .enter().append("circle")
                     .attr("cx", d => projection(d.feature.properties.center)[0])
@@ -112,7 +114,7 @@
                     .attr("fill", '#500');
             }
 
-            update();
+            update('2020-03-05T09:00:00.000Z');
         });
 
 
