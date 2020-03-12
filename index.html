@@ -83,10 +83,18 @@
                 .domain([0, d3.max(Array.from(allTime.districts.values()), d => d.cases.length)])
                 .range([0, 20]);
 
+            const f = topojson.feature(topo, topo.objects.sairaanhoitopiiri);
+
+            svg.select('g.districts')
+                .selectAll("path")
+                .data(f.features)
+                    .enter().append("path")
+                    .attr("d", path)
+                    .attr("fill", '#500');
+
             function update(time) {
                 const vis = transform(corona, time);
                 
-                const f = topojson.feature(topo, topo.objects.sairaanhoitopiiri);
                 f.features.forEach(f => {
                     f.properties.center = [f.properties.X_COORD, f.properties.Y_COORD];
                     const district = vis.districts.get(f.properties.json_shp_nimi);
@@ -104,15 +112,9 @@
                     .attr("cx", d => projection(d.feature.properties.center)[0])
                     .attr("cy", d => projection(d.feature.properties.center)[1])
                     .attr("r", d => circleScale(d.cases.length));
-
-
-                svg.select('g.districts')
-                .selectAll("path")
-                .data(f.features)
-                    .enter().append("path")
-                    .attr("d", path)
-                    .attr("fill", '#500');
             }
+
+            
 
             update('2020-03-05T09:00:00.000Z');
         });
