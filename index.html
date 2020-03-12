@@ -107,16 +107,26 @@
 
                 svg.select('g.centers')
                 .selectAll("circle")
-                .data(coronaDistricts)
-                    .enter().append("circle")
-                    .attr("cx", d => projection(d.feature.properties.center)[0])
-                    .attr("cy", d => projection(d.feature.properties.center)[1])
-                    .attr("r", d => circleScale(d.cases.length));
+                .data(coronaDistricts, d => d.id)
+                .join(
+                    enter => {
+                        enter
+                            .append("circle")
+                            .attr("cx", d => projection(d.feature.properties.center)[0])
+                            .attr("cy", d => projection(d.feature.properties.center)[1])
+                            .attr("r", d => circleScale(d.cases.length));
+                        
+                    },
+                    update => {
+                        update.attr("r", d => circleScale(d.cases.length));
+                    }
+                );
             }
 
             
 
-            update('2020-03-05T09:00:00.000Z');
+            update('2030-03-09');
+
         });
 
 
