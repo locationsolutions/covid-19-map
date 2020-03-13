@@ -57,9 +57,11 @@ Promise.all([
                     .append("circle")
                     .attr("cx", d => projection(d.feature.properties.center)[0])
                     .attr("cy", d => projection(d.feature.properties.center)[1])
-                    .attr("r", d => circleScale(d.cases.length))
+                    .attr("r", 0)
                     .attr('fill', 'rgba(153,31,61, 0.9)')
-        ).attr("r", d => circleScale(d.cases.length));
+                    .call(enter => enter.transition().duration(500).ease(d3.easeBackOut.overshoot(4)).attr('r', d => circleScale(d.cases.length))),
+            update => update.call(enter => enter.transition().duration(500).ease(d3.easeCubicOut).attr('r', d => circleScale(d.cases.length)))
+        );
 
 
         corona.features.forEach(d => {
