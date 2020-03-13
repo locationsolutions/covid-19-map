@@ -105,8 +105,8 @@
             const allTime = transform(corona);
 
             const circleScale = d3.scalePow().exponent(0.5)
-                .domain([0, d3.max(Array.from(allTime.districts.values()), d => d.cases.length)])
-                .range([0, 20]);
+                .domain([1, d3.max(Array.from(allTime.districts.values()), d => d.cases.length)])
+                .range([2, 20]);
 
             const f = topojson.feature(topo, topo.objects.SHP_population);
 
