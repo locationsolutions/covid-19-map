@@ -22,6 +22,30 @@
             width: 100%;
             max-width: 500px;
         }
+
+        .tooltip {
+            position: absolute;
+            pointer-events: none;
+            z-index: 15;
+            border-left: 1px solid #7b7b7c;
+        }
+
+        .tooltip .inner {
+            position: relative;
+            left: -50%;
+            bottom: 20px;
+            background-color: #fff;
+            padding: 15px;
+            border: 1px solid #7b7b7c;
+            text-align: center;
+        }
+        svg#map { 
+            display: block;
+        }
+
+        svg#map circle {
+            pointer-events: none;
+        }
     </style>
 </head>
 
@@ -32,6 +56,7 @@
             <g class="centers"></g>
         </svg>
         <span id="date"></span>
+        <div class="tooltip" id="tooltip" style="visibility: hidden;"><div class="inner">content</div></div>
     </div>
     <form id="slider-form"><input type="range" id="slider" name="points" min="0" max="100" value="0"></form>
     <script>
@@ -98,6 +123,8 @@
         .translate([width / 2, height / 2]);
 
         const path = d3.geoPath().projection(projection);
+
+        let hoverDistrict = null;
         
         Promise.all([
             fetch('https://vectiles.s3.eu-central-1.amazonaws.com/sairaanhoitopiiri2.topojson.json').then(r => r.json()),
@@ -140,18 +167,24 @@
                             .attr('fill', 'rgba(153,31,61, 0.9)')
                 ).attr("r", d => circleScale(d.cases.length));
 
+
+                corona.features.forEach(d => {
+                    d.district = vis.districts.get(d.properties.json_shp_nimi);
+                });
+
                 svg.select('g.districts')
                 .selectAll("path")
-                .data(corona.features)
+                .data(corona.features, d => d.id)
                 .join(enter => 
                     enter.append("path")
                         .attr("d", path)
-                        .attr("stroke", '#fff')
-                ).attr("fill", d => {
-                    const district = vis.districts.get(d.properties.json_shp_nimi);
-                    
-                    return district ? fillColorScale(district.caseRatio || 0) : fillColorScale(0);
-                });
+                        .on("mouseover", handleMouseOver)
+                        .on("mouseout", handleMouseOut)
+                )
+                .attr("fill", d => d.district ? fillColorScale(d.district.caseRatio || 0) : fillColorScale(0))
+                .attr("stroke", d => d.id === hoverDistrict ? d3.interpolateOranges(0.6) : '#fff')
+                .filter(d => d.id === hoverDistrict)
+                .raise();
             }
 
             
@@ -180,11 +213,26 @@
                 }, 1000);
             }
 
+            const tooltip = document.getElementById('tooltip');
+            function handleMouseOver (e) {
+                tooltip.style.visibility = 'visible';
+                const center = projection(e.properties.center);
+                tooltip.style.left = center[0] + 'px';
+                tooltip.style.bottom = height - center[1] + 'px';
+                hoverDistrict = e.id;
+                fromSlider();
+            }
+            function handleMouseOut (e) {
+                tooltip.style.visibility = 'hidden';
+                hoverDistrict = null;
+                fromSlider();
+            }
+
             fromSlider();
             startAnim();
         });
 
-
+        
 
     </script>
 </body>
