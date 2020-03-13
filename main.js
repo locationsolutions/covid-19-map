@@ -1,4 +1,5 @@
 import { transform } from './transform';
+import months from './months';
 
 const width = 300;
 const height = 500;
@@ -8,8 +9,8 @@ const svg = d3.select("svg#map")
     .attr('height', height);
 
 const projection = d3.geoMercator()
-    .scale(1100)
-    .center([24.5, 65.2])
+    .scale(1090)
+    .center([24.5, 65.1])
     .translate([width / 2, height / 2]);
 
 const path = d3.geoPath().projection(projection);
@@ -98,7 +99,7 @@ Promise.all([
 
     function fromSlider() {
         const date = timeScale.invert(slider.value);
-        dateSpan.innerText = date.toISOString().slice(0, 10);
+        dateSpan.innerText = `Tartuntatilanne ${date.getDate()}. ${months[date.getMonth()]} ${date.getFullYear()}`;
         update(date.toISOString());
     }
 
