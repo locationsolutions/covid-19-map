@@ -64,6 +64,7 @@ const path = d3.geoPath().projection(projection);
 let hoverDistrict = null;
 const numCasesSpan = document.getElementById('cases-num');
 const ratioCasesSpan = document.getElementById('cases-ratio');
+const districtNameSpan = document.getElementById('district-name');
 
 Promise.all([
     fetch('https://vectiles.s3.eu-central-1.amazonaws.com/sairaanhoitopiiri2.topojson.json').then(r => r.json()),
@@ -132,6 +133,7 @@ Promise.all([
             }
             numCasesSpan.innerText = cases;
             ratioCasesSpan.innerText = ratio;
+            districtNameSpan.innerText = e.properties.json_shp_nimi;
         })
         .raise();
     }
