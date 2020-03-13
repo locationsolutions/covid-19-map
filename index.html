@@ -91,7 +91,7 @@
         const path = d3.geoPath().projection(projection);
         
         Promise.all([
-            fetch('https://vectiles.s3.eu-central-1.amazonaws.com/sairaanhoitopiiri.topojson.json').then(r => r.json()),
+            fetch('https://vectiles.s3.eu-central-1.amazonaws.com/sairaanhoitopiiri2.topojson.json').then(r => r.json()),
             fetch('https://w3qa5ydb4l.execute-api.eu-west-1.amazonaws.com/prod/finnishCoronaData').then(r => r.json())
         ]).then(responses => {
             const topo = responses[0];
@@ -108,7 +108,7 @@
                 .domain([0, d3.max(Array.from(allTime.districts.values()), d => d.cases.length)])
                 .range([0, 20]);
 
-            const f = topojson.feature(topo, topo.objects.sairaanhoitopiiri);
+            const f = topojson.feature(topo, topo.objects.SHP_population);
 
             svg.select('g.districts')
                 .selectAll("path")
