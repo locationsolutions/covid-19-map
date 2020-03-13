@@ -1,51 +1,4 @@
-function transform (data, before = '3000') {
-    const cases = new Map();
-    const districts = new Map();
-
-    const filteredConfirmed = data.confirmed.filter(c => c.date < before);
-    
-    filteredConfirmed.forEach(c => {
-        cases.set(Number(c.id), c);
-
-
-        let val = districts.get(c.healthCareDistrict);
-        if (!val) {
-            val = {
-                id: c.healthCareDistrict,
-                cases: []
-            }
-        }
-        val.cases.push(c);
-        districts.set(c.healthCareDistrict, val);
-    });
-    const edges = new Map();
-    filteredConfirmed
-        .filter(c => typeof c.infectionSource === 'number')
-        .forEach(c => {
-            const key = cases.get(c.infectionSource).healthCareDistrict + '%%' + c.healthCareDistrict;
-            let val = edges.get(key);
-            if (!val) {
-                val = 0;
-            }
-            val++;
-            edges.set(key, val);
-        });
-
-    data.features.forEach(f => {
-        f.properties.center = [f.properties.X_COORD, f.properties.Y_COORD];
-        const district = districts.get(f.properties.json_shp_nimi);
-        if (district) {
-            district.feature = f;
-            district.caseRatio = district.cases.length / f.properties.population;
-        }
-    });
-
-    return {
-        cases,
-        districts,
-        edges
-    }
-}
+import { transform } from './transform';
 
 const width = 300;
 const height = 500;
@@ -113,29 +66,29 @@ Promise.all([
         });
 
         svg.select('g.districts')
-        .selectAll("path")
-        .data(corona.features, d => d.id)
-        .join(enter => 
-            enter.append("path")
-                .attr("d", path)
-                .on("mouseover", handleMouseOver)
-                .on("mouseout", handleMouseOut)
-        )
-        .attr("fill", d => d.district ? fillColorScale(d.district.caseRatio || 0) : fillColorScale(0))
-        .attr("stroke", d => d.id === hoverDistrict ? d3.interpolateOranges(0.6) : '#fff')
-        .filter(d => d.id === hoverDistrict)
-        .each(e => {
-            let cases = 0;
-            let ratio = 0;
-            if (e.district) {
-                cases = e.district.cases.length;
-                ratio = (e.district.caseRatio * 100000).toFixed(1);
-            }
-            numCasesSpan.innerText = cases;
-            ratioCasesSpan.innerText = ratio;
-            districtNameSpan.innerText = e.properties.json_shp_nimi;
-        })
-        .raise();
+            .selectAll("path")
+            .data(corona.features, d => d.id)
+            .join(enter => 
+                enter.append("path")
+                    .attr("d", path)
+                    .on("mouseover", handleMouseOver)
+                    .on("mouseout", handleMouseOut)
+            )
+            .attr("fill", d => d.district ? fillColorScale(d.district.caseRatio || 0) : fillColorScale(0))
+            .attr("stroke", d => d.id === hoverDistrict ? d3.interpolateOranges(0.6) : '#fff')
+            .filter(d => d.id === hoverDistrict)
+            .each(e => {
+                let cases = 0;
+                let ratio = 0;
+                if (e.district) {
+                    cases = e.district.cases.length;
+                    ratio = (e.district.caseRatio * 100000).toFixed(1);
+                }
+                numCasesSpan.innerText = cases;
+                ratioCasesSpan.innerText = ratio;
+                districtNameSpan.innerText = e.properties.json_shp_nimi;
+            })
+            .raise();
     }
 
     
