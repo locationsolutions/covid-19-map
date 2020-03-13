@@ -47,7 +47,7 @@ function transform (data, before = '3000') {
     }
 }
 
-const width = 500;
+const width = 300;
 const height = 500;
 
 const svg = d3.select("svg#map")
@@ -55,9 +55,9 @@ const svg = d3.select("svg#map")
     .attr('height', height);
 
 const projection = d3.geoMercator()
-.scale(1100)
-.center([24, 65.5])
-.translate([width / 2, height / 2]);
+    .scale(1100)
+    .center([24.5, 65.2])
+    .translate([width / 2, height / 2]);
 
 const path = d3.geoPath().projection(projection);
 

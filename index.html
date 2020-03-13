@@ -23,7 +23,7 @@
         }
         input#slider {
             width: 100%;
-            max-width: 500px;
+            max-width: 300px;
         }
 
         .tooltip {
@@ -53,8 +53,12 @@
         .tooltip h4 {
             margin: 0 0;
         }
+        .tooltip #unit {
+            font-size: 12px;
+        }
         .tooltip #cases-num {
             font-size: 20px;
+            font-weight: bold;
             margin: 10px 0;
         }
     </style>
@@ -69,7 +73,7 @@
         <span id="date"></span>
         <div class="tooltip" id="tooltip" style="visibility: hidden;"><div class="inner">
             <h4 id="district-name"></h4>
-            <div><span id="cases-num"></span> kpl</div>
+            <div><span id="cases-num"></span> <span id="unit">kpl</span></div>
             <div><span id="cases-ratio"></span> / 100 000 as.</div>
         </div></div>
     </div>
