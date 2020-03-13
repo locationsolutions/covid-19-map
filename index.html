@@ -9,7 +9,11 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/fetch/2.0.4/fetch.min.js" integrity="sha256-eOUokb/RjDw7kS+vDwbatNrLN8BIvvEhlLM5yogcDIo=" crossorigin="anonymous"></script>
     <script src="https://d3js.org/d3.v5.min.js"></script>
     <script src="https://d3js.org/topojson.v2.min.js"></script>
+    <link href="https://fonts.googleapis.com/css?family=Open+Sans:400,700&display=swap" rel="stylesheet">
     <style>
+        div, span, h4 {
+            font-family: 'Open Sans', sans-serif;
+        }
         #map-wrap {
             position: relative;
         }
@@ -17,6 +21,7 @@
             position: absolute;
             bottom: 0;
             left: 0;
+            font-size: 14px;
         }
         form#slider-form {
             display: block;
@@ -52,6 +57,8 @@
 
         .tooltip h4 {
             margin: 0 0;
+            font-weight: normal;
+            font-size: 14px;
         }
         .tooltip #unit {
             font-size: 12px;
@@ -60,6 +67,9 @@
             font-size: 20px;
             font-weight: bold;
             margin: 10px 0;
+        }
+        .tooltip #cases-line {
+            font-size: 14px;
         }
     </style>
 </head>
@@ -74,7 +84,7 @@
         <div class="tooltip" id="tooltip" style="visibility: hidden;"><div class="inner">
             <h4 id="district-name"></h4>
             <div><span id="cases-num"></span> <span id="unit">kpl</span></div>
-            <div><span id="cases-ratio"></span> / 100 000 as.</div>
+            <div id="cases-line"><span id="cases-ratio"></span> / 100 000 as.</div>
         </div></div>
     </div>
     <form id="slider-form"><input type="range" id="slider" name="points" min="0" max="100" value="0"></form>
