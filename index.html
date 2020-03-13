@@ -69,6 +69,15 @@
                     edges.set(key, val);
                 });
 
+            data.features.forEach(f => {
+                f.properties.center = [f.properties.X_COORD, f.properties.Y_COORD];
+                const district = districts.get(f.properties.json_shp_nimi);
+                if (district) {
+                    district.feature = f;
+                    district.caseRatio = district.cases.length / f.properties.population;
+                }
+            });
+
             return {
                 cases,
                 districts,
@@ -97,6 +106,8 @@
             const topo = responses[0];
             const corona = responses[1];
 
+            corona.features = topojson.feature(topo, topo.objects.SHP_population).features;
+
             const timeExtent = ['2020-02-26T10:17:15.000Z', d3.max(corona.confirmed, c => c.date)];
             const timeScale = d3.scaleTime()
                 .domain(timeExtent.map(t => new Date(t)))
@@ -104,30 +115,16 @@
 
             const allTime = transform(corona);
 
+            const allTimeDistricts = Array.from(allTime.districts.values());
             const circleScale = d3.scalePow().exponent(0.5)
-                .domain([1, d3.max(Array.from(allTime.districts.values()), d => d.cases.length)])
+                .domain([1, d3.max(allTimeDistricts, d => d.cases.length)])
                 .range([2, 20]);
 
-            const f = topojson.feature(topo, topo.objects.SHP_population);
+            const fillColorScale = d3.scaleSequential(d3.interpolateOranges).domain([0, d3.max(allTimeDistricts, d => d.caseRatio * 2)]);
 
-            svg.select('g.districts')
-                .selectAll("path")
-                .data(f.features)
-                    .enter().append("path")
-                    .attr("d", path)
-                    .attr("fill", '#ddd')
-                    .attr("stroke", '#fff');
 
             function update(time) {
                 const vis = transform(corona, time);
-                
-                f.features.forEach(f => {
-                    f.properties.center = [f.properties.X_COORD, f.properties.Y_COORD];
-                    const district = vis.districts.get(f.properties.json_shp_nimi);
-                    if (district) {
-                        district.feature = f;
-                    }
-                });
 
                 const coronaDistricts = Array.from(vis.districts.values());
 
@@ -135,19 +132,26 @@
                 .selectAll("circle")
                 .data(coronaDistricts, d => d.id)
                 .join(
-                    enter => {
-                        enter
+                    enter => enter
                             .append("circle")
                             .attr("cx", d => projection(d.feature.properties.center)[0])
                             .attr("cy", d => projection(d.feature.properties.center)[1])
                             .attr("r", d => circleScale(d.cases.length))
-                            .attr('fill', 'rgba(153,31,61, 0.9)');
-                        
-                    },
-                    update => {
-                        update.attr("r", d => circleScale(d.cases.length));
-                    }
-                );
+                            .attr('fill', 'rgba(153,31,61, 0.9)')
+                ).attr("r", d => circleScale(d.cases.length));
+
+                svg.select('g.districts')
+                .selectAll("path")
+                .data(corona.features)
+                .join(enter => 
+                    enter.append("path")
+                        .attr("d", path)
+                        .attr("stroke", '#fff')
+                ).attr("fill", d => {
+                    const district = vis.districts.get(d.properties.json_shp_nimi);
+                    
+                    return district ? fillColorScale(district.caseRatio || 0) : fillColorScale(0);
+                });
             }
 
             
@@ -175,8 +179,6 @@
                     fromSlider();
                 }, 1000);
             }
-
-            
 
             fromSlider();
             startAnim();
