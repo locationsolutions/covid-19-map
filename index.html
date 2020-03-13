@@ -35,7 +35,7 @@
             left: -50%;
             bottom: 20px;
             background-color: #fff;
-            padding: 15px;
+            padding: 10px;
             border: 1px solid #7b7b7c;
             text-align: center;
         }
@@ -45,6 +45,14 @@
 
         svg#map circle {
             pointer-events: none;
+        }
+
+        .tooltip h4 {
+            margin: 0 0;
+        }
+        .tooltip #cases-num {
+            font-size: 20px;
+            margin: 10px 0;
         }
     </style>
 </head>
@@ -56,7 +64,11 @@
             <g class="centers"></g>
         </svg>
         <span id="date"></span>
-        <div class="tooltip" id="tooltip" style="visibility: hidden;"><div class="inner">content</div></div>
+        <div class="tooltip" id="tooltip" style="visibility: hidden;"><div class="inner">
+            <h4>Tautitapaukset</h4>
+            <div id="cases-num"></div>
+            <div><span id="cases-ratio"></span> / 100 000 as.</div>
+        </div></div>
     </div>
     <form id="slider-form"><input type="range" id="slider" name="points" min="0" max="100" value="0"></form>
     <script>
@@ -125,6 +137,8 @@
         const path = d3.geoPath().projection(projection);
 
         let hoverDistrict = null;
+        const numCasesSpan = document.getElementById('cases-num');
+        const ratioCasesSpan = document.getElementById('cases-ratio');
         
         Promise.all([
             fetch('https://vectiles.s3.eu-central-1.amazonaws.com/sairaanhoitopiiri2.topojson.json').then(r => r.json()),
@@ -184,6 +198,16 @@
                 .attr("fill", d => d.district ? fillColorScale(d.district.caseRatio || 0) : fillColorScale(0))
                 .attr("stroke", d => d.id === hoverDistrict ? d3.interpolateOranges(0.6) : '#fff')
                 .filter(d => d.id === hoverDistrict)
+                .each(e => {
+                    let cases = 0;
+                    let ratio = 0;
+                    if (e.district) {
+                        cases = e.district.cases.length;
+                        ratio = (e.district.caseRatio * 100000).toFixed(1);
+                    }
+                    numCasesSpan.innerText = cases;
+                    ratioCasesSpan.innerText = ratio;
+                })
                 .raise();
             }
 
