@@ -1,0 +1,20 @@
+{
+  "name": "korona-anim",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "dev": "parcel index.html",
+    "build": "parcel build index.html"
+  },
+  "keywords": [],
+  "author": "Jan Wolski",
+  "private": true,
+  "devDependencies": {
+    "parcel-bundler": "^1.12.4"
+  },
+  "browserslist": [
+    "defaults",
+    "ie 11"
+  ]
+}
