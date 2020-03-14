@@ -6,6 +6,7 @@ import 'whatwg-fetch';
 import { transform } from './transform';
 import months from './months';
 import topo from './district-data';
+import { onRangeChange } from './slider-helper';
 
 const width = 350;
 const height = 500;
@@ -100,7 +101,6 @@ fetch('https://w3qa5ydb4l.execute-api.eu-west-1.amazonaws.com/prod/finnishCorona
 
     
     const slider = document.getElementById('slider');
-    const form = document.getElementById('slider-form');
     const dateSpan = document.getElementById('date');
 
     function fromSlider() {
@@ -137,7 +137,7 @@ fetch('https://w3qa5ydb4l.execute-api.eu-west-1.amazonaws.com/prod/finnishCorona
         setAnimState(!ref);
     }, true);
 
-    form.addEventListener('input', function() {
+    onRangeChange(slider, function(e) {
         fromSlider();
         setAnimState(false);
     }, true);
