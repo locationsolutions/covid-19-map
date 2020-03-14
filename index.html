@@ -13,6 +13,7 @@
     <style>
         div, span, h4 {
             font-family: 'Open Sans', sans-serif;
+            color: #333;
         }
         #map-wrap {
             position: relative;
@@ -21,7 +22,10 @@
             position: absolute;
             bottom: 0;
             left: 0;
+            font-weight: bold;
+            text-align: center;
             font-size: 14px;
+            width: 300px;
         }
         form#slider-form {
             display: block;
@@ -37,7 +41,7 @@
             position: absolute;
             pointer-events: none;
             z-index: 15;
-            border-left: 1px solid #7b7b7c;
+            border-left: 1px solid #999;
         }
 
         .tooltip .inner {
@@ -45,8 +49,8 @@
             left: -50%;
             bottom: 20px;
             background-color: #fff;
-            padding: 10px;
-            border: 1px solid #7b7b7c;
+            padding: 7px 10px 10px 10px;
+            border: 1px solid #999;
             text-align: center;
         }
         svg#map { 
@@ -59,19 +63,22 @@
 
         .tooltip h4 {
             margin: 0 0;
-            font-weight: normal;
-            font-size: 14px;
+            font-weight: bold;
+            font-size: 16px;
         }
         .tooltip #unit {
             font-size: 12px;
+            font-weight: bold;
+            display: inline-block;
+            margin-left: 2px
         }
         .tooltip #cases-num {
             font-size: 20px;
             font-weight: bold;
-            margin: 10px 0;
         }
         .tooltip #cases-line {
-            font-size: 14px;
+            font-size: 13px;
+            margin: 0;
         }
         #control {
             float: left;
@@ -121,7 +128,7 @@
         <span id="date"></span>
         <div class="tooltip" id="tooltip" style="visibility: hidden;"><div class="inner">
             <h4 id="district-name"></h4>
-            <div><span id="cases-num"></span> <span id="unit">kpl</span></div>
+            <div><span id="cases-num"></span><span id="unit">kpl</span></div>
             <div id="cases-line"><span id="cases-ratio"></span> / 100 000 as.</div>
         </div></div>
     </div>
