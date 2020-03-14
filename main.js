@@ -105,20 +105,38 @@ Promise.all([
         update(date.toISOString());
     }
 
-    form.addEventListener('input', function() {
-        fromSlider();
-    }, true);
 
-    function startAnim() {
-        const ref = setInterval(() => {
+    let ref = null;
+    const control = document.getElementById('control');
+    function setAnimState(shouldRun) {
+        if (!shouldRun) {
+            clearInterval(ref);
+            ref = null;
+            control.className = '';
+            return;
+        }
+        ref = setInterval(() => {
             const newValue = Math.min(Number(slider.value) + 10, 100);
             if (newValue === 100) {
-                clearInterval(ref);
+                setAnimState(false);
             }
             slider.value = newValue;
             fromSlider();
         }, 1000);
+        control.className = 'pause';
+        if (Number(slider.value) === 100) {
+            slider.value = 0;
+            fromSlider();
+        }
     }
+    control.addEventListener('click', function() {
+        setAnimState(!ref);
+    }, true);
+
+    form.addEventListener('input', function() {
+        fromSlider();
+        setAnimState(false);
+    }, true);
 
     const tooltip = document.getElementById('tooltip');
     function handleMouseOver (e) {
@@ -136,7 +154,7 @@ Promise.all([
     }
 
     fromSlider();
-    startAnim();
+    setAnimState(true);
 });
 
 
