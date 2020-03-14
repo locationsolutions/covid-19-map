@@ -3,6 +3,8 @@ import 'core-js/features/array/from';
 import 'core-js/features/map';
 import 'whatwg-fetch';
 
+import * as topojson from "topojson-client";
+
 import { transform } from './transform';
 import months from './months';
 import topo from './district-data';
