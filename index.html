@@ -25,10 +25,12 @@
         }
         form#slider-form {
             display: block;
+            height: 36px;
+            line-height: 36px;
         }
         input#slider {
             width: 100%;
-            max-width: 300px;
+            max-width: 259px;
         }
 
         .tooltip {
@@ -75,10 +77,11 @@
             float: left;
             height: 36px;
             width: 36px;
-            background-color: #eee;
+            background-color: #E31937;
             cursor: pointer;
             position: relative;
             border-radius: 20px;
+            margin-right: 5px;
         }
         #control:not(.pause):after {
             content: '';
@@ -88,13 +91,13 @@
             left: 14px;
             border-style: solid;
             border-width: 7px 0 7px 11px;
-            border-color: transparent transparent transparent #3c3c3c;
+            border-color: transparent transparent transparent #fff;
         }
         #control.pause:before,
         #control.pause:after {
             width: 4px;
             height: 12px;
-            background: #3c3c3c;
+            background: #fff;
             position: absolute;
             content: "";
             top: 12px;
@@ -102,6 +105,9 @@
         }
         #control.pause:after {
             left: 19px;
+        }
+        #bottom-bar {
+            margin-top: 5px;
         }
     </style>
 </head>
@@ -119,7 +125,7 @@
             <div id="cases-line"><span id="cases-ratio"></span> / 100 000 as.</div>
         </div></div>
     </div>
-    <div><div id="control"></div><form id="slider-form"><input type="range" id="slider" name="points" min="0" max="100" value="0"></form></div>
+    <div id="bottom-bar"><div id="control"></div><form id="slider-form"><input type="range" id="slider" name="points" min="0" max="100" value="0"></form></div>
     
     <script src="./main.js"></script>
 </body>
