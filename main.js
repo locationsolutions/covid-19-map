@@ -58,10 +58,13 @@ Promise.all([
                     .attr("cx", d => projection(d.feature.properties.center)[0])
                     .attr("cy", d => projection(d.feature.properties.center)[1])
                     .attr("r", 0)
-                    .attr('fill', 'rgba(153,31,61, 0.9)')
                     .call(enter => enter.transition().duration(500).ease(d3.easeBackOut.overshoot(4)).attr('r', d => circleScale(d.cases.length))),
             update => update.call(enter => enter.transition().duration(500).ease(d3.easeCubicOut).attr('r', d => circleScale(d.cases.length)))
-        );
+        )
+        .attr('fill', d => d.feature.id === hoverDistrict ? '#E31937' : '#991F3D')
+        .attr('opacity', d => d.feature.id === hoverDistrict ? 1 : 0.8)
+        .filter(d => d.feature.id === hoverDistrict)
+        .raise();
 
 
         corona.features.forEach(d => {
