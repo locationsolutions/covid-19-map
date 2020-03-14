@@ -16,5 +16,9 @@
   "browserslist": [
     "defaults",
     "ie 11"
-  ]
+  ],
+  "dependencies": {
+    "core-js": "^3.6.4",
+    "whatwg-fetch": "^3.0.0"
+  }
 }

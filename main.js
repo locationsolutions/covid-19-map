@@ -1,5 +1,11 @@
+import 'core-js/features/promise';
+import 'core-js/features/array/from';
+import 'core-js/features/map';
+import 'whatwg-fetch';
+
 import { transform } from './transform';
 import months from './months';
+import topo from './district-data';
 
 const width = 300;
 const height = 500;
@@ -20,13 +26,8 @@ const numCasesSpan = document.getElementById('cases-num');
 const ratioCasesSpan = document.getElementById('cases-ratio');
 const districtNameSpan = document.getElementById('district-name');
 
-Promise.all([
-    fetch('https://vectiles.s3.eu-central-1.amazonaws.com/sairaanhoitopiiri2.topojson.json').then(r => r.json()),
-    fetch('https://w3qa5ydb4l.execute-api.eu-west-1.amazonaws.com/prod/finnishCoronaData').then(r => r.json())
-]).then(responses => {
-    const topo = responses[0];
-    const corona = responses[1];
-
+fetch('https://w3qa5ydb4l.execute-api.eu-west-1.amazonaws.com/prod/finnishCoronaData').then(r => r.json())
+.then(corona => {
     corona.features = topojson.feature(topo, topo.objects.SHP_population).features;
 
     const timeExtent = ['2020-02-26T10:17:15.000Z', d3.max(corona.confirmed, c => c.date)];
@@ -35,7 +36,7 @@ Promise.all([
         .range([0, 100]);
 
     const allTime = transform(corona);
-
+    
     const allTimeDistricts = Array.from(allTime.districts.values());
     const circleScale = d3.scalePow().exponent(0.5)
         .domain([1, d3.max(allTimeDistricts, d => d.cases.length)])
