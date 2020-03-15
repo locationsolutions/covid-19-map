@@ -5,6 +5,7 @@
     <meta charset="utf-8">
     <title>Koronakartta</title>
     <script src="https://d3js.org/d3.v5.min.js"></script>
+    <link href="./slider.css" rel="stylesheet">
     <link href="https://fonts.googleapis.com/css?family=Open+Sans:400,700&display=swap" rel="stylesheet">
     <style>
         div, span, h4 {
@@ -23,15 +24,7 @@
             font-size: 14px;
             width: 350px;
         }
-        form#slider-form {
-            display: block;
-            height: 36px;
-            line-height: 36px;
-        }
-        input#slider {
-            width: 100%;
-            max-width: 304px;
-        }
+
 
         .tooltip {
             position: absolute;
@@ -129,7 +122,13 @@
             <div id="cases-line"><span id="cases-ratio"></span> / 100 000 as.</div>
         </div></div>
     </div>
-    <div id="bottom-bar"><div id="control"></div><form id="slider-form"><input type="range" id="slider" name="points" min="0" max="100" value="0"></form></div>
+    <div id="bottom-bar"><div id="control"></div>
+        <div class="sb-slider-holder">
+            <div class="sb-slider-area">
+                <input type="range" class="sb-slider" id="slider" name="points" min="0" max="100" value="0"></input>
+            </div>
+        </div>
+    </div>
     
     <script src="./main.js"></script>
 </body>
