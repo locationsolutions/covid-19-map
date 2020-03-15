@@ -3,6 +3,7 @@ import 'core-js/features/array/from';
 import 'core-js/features/map';
 import 'whatwg-fetch';
 
+import * as d3 from "d3";
 import * as topojson from "topojson-client";
 
 import { transform } from './transform';
