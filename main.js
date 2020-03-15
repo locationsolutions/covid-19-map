@@ -159,6 +159,15 @@ fetch('https://w3qa5ydb4l.execute-api.eu-west-1.amazonaws.com/prod/finnishCorona
         fromSlider();
     }
 
+    svg.select('.back').append('rect')
+        .attr('x', 0)
+        .attr('x', 0)
+        .attr('width', width)
+        .attr('height', height)
+        .attr('fill', '#fff')
+        .on("mouseover", handleMouseOut);
+
+
     fromSlider();
     setAnimState(true);
 });
