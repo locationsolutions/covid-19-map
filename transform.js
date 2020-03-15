@@ -18,19 +18,7 @@ export function transform (data, before = '3000') {
         val.cases.push(c);
         districts.set(c.healthCareDistrict, val);
     });
-    const edges = new Map();
-    filteredConfirmed
-        .filter(c => typeof c.infectionSource === 'number')
-        .forEach(c => {
-            const key = cases.get(c.infectionSource).healthCareDistrict + '%%' + c.healthCareDistrict;
-            let val = edges.get(key);
-            if (!val) {
-                val = 0;
-            }
-            val++;
-            edges.set(key, val);
-        });
-
+    
     data.features.forEach(f => {
         f.properties.center = [f.properties.X_COORD, f.properties.Y_COORD];
         const district = districts.get(f.properties.json_shp_nimi);
@@ -39,10 +27,19 @@ export function transform (data, before = '3000') {
             district.caseRatio = district.cases.length / f.properties.population;
         }
     });
+    
+    const spread = filteredConfirmed
+        .filter(c => {
+            if ( typeof c.infectionSource !== 'number') {
+                return false;
+            }
+            c.infectionDistrict = districts.get(cases.get(c.infectionSource).healthCareDistrict);
+            return c.infectionDistrict.id !== c.healthCareDistrict;
+        });
 
     return {
         cases,
         districts,
-        edges
+        spread
     }
 }
