@@ -9,6 +9,7 @@ import * as topojson from "topojson-client";
 import { transform } from './transform';
 import topo from './district-data';
 import { onRangeChange } from './slider-helper';
+import './slider.css';
 
 const width = 350;
 const height = 500;
