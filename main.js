@@ -113,29 +113,32 @@ fetch('https://w3qa5ydb4l.execute-api.eu-west-1.amazonaws.com/prod/finnishCorona
 
     let ref = null;
     const control = document.getElementById('control');
-    function setAnimState(shouldRun) {
+    function step() {
+        const newValue = Math.min(Number(slider.value) + 10, 100);
+        if (newValue === 100) {
+            setAnimState(false);
+        }
+        slider.value = newValue;
+        fromSlider();
+    }
+    function setAnimState(shouldRun, immediateStep) {
         if (!shouldRun) {
             clearInterval(ref);
             ref = null;
             control.className = '';
             return;
         }
-        ref = setInterval(() => {
-            const newValue = Math.min(Number(slider.value) + 10, 100);
-            if (newValue === 100) {
-                setAnimState(false);
-            }
-            slider.value = newValue;
-            fromSlider();
-        }, 1000);
+        ref = setInterval(step, 1000);
         control.className = 'pause';
         if (Number(slider.value) === 100) {
             slider.value = 0;
             fromSlider();
+        } else if (immediateStep) {
+            step();
         }
     }
     control.addEventListener('click', function() {
-        setAnimState(!ref);
+        setAnimState(!ref, true);
     }, true);
 
     onRangeChange(slider, function(e) {
