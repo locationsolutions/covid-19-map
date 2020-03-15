@@ -6,7 +6,6 @@ import 'whatwg-fetch';
 import * as topojson from "topojson-client";
 
 import { transform } from './transform';
-import months from './months';
 import topo from './district-data';
 import { onRangeChange } from './slider-helper';
 
@@ -107,7 +106,7 @@ fetch('https://w3qa5ydb4l.execute-api.eu-west-1.amazonaws.com/prod/finnishCorona
 
     function fromSlider() {
         const date = timeScale.invert(slider.value);
-        dateSpan.innerText = `Tartuntatilanne ${date.getDate()}. ${months[date.getMonth()]} ${date.getFullYear()}`;
+        dateSpan.innerText = `Tapaukset ${date.getDate()}.${date.getMonth()+1}.${date.getFullYear()} mennessä`;
         update(date.toISOString());
     }
 
