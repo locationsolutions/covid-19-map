@@ -20,10 +20,11 @@ const svg = d3.select("svg#map")
     .attr('width', width)
     .attr('height', height);
 
-const projection = d3.geoMercator()
-    .scale(1090)
-    .center([25.5, 65.1])
-    .translate([width / 2, height / 2]);
+const projection = d3.geoAzimuthalEqualArea()
+    .scale(2600)
+    .center([0,0])
+    .rotate([-25.4, -64.6])
+    .translate([width/2,height/2]);
 
 const path = d3.geoPath().projection(projection);
 
