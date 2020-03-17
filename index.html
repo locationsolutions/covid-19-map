@@ -16,6 +16,7 @@
         }
         #map-wrap {
             position: relative;
+            display: inline-block;
         }
         span#date {
             position: absolute;
@@ -107,6 +108,15 @@
         #bottom-bar {
             margin-top: 5px;
         }
+        #attribution {
+            position: absolute;
+            top: 0;
+            right: 0;
+            font-size: 10px;
+        }
+        #attribution, #attribution a {
+            color: #aaa;
+        }
     </style>
 </head>
 
@@ -123,6 +133,7 @@
             <div><span id="cases-num"></span><span id="unit">kpl</span></div>
             <div id="cases-line"><span id="cases-ratio"></span> / 100 000 as.</div>
         </div></div>
+        <div id="attribution">Tietolähde: <a href="https://github.com/HS-Datadesk/koronavirus-avoindata" target="_blank">HS</a></div>
     </div>
     <div id="bottom-bar">
         <div id="control"></div>
