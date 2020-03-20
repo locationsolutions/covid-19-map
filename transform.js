@@ -2,7 +2,7 @@ export function transform (data, before = '3000') {
     const cases = new Map();
     const districts = new Map();
 
-    const filteredConfirmed = data.confirmed.filter(c => c.date < before);
+    const filteredConfirmed = data.confirmed.filter(c => c.healthCareDistrict && c.date < before);
     
     filteredConfirmed.forEach(c => {
         cases.set(Number(c.id), c);
