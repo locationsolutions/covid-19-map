@@ -2,11 +2,13 @@ export function transform (data, before = '3000') {
     const cases = new Map();
     const districts = new Map();
 
-    const filteredConfirmed = data.confirmed.filter(c => c.healthCareDistrict && c.date < before);
+    const filteredConfirmed = data.confirmed.filter(c => c.date < before);
     
     filteredConfirmed.forEach(c => {
         cases.set(Number(c.id), c);
-
+        if (!c.healthCareDistrict) {
+            return;
+        }
 
         let val = districts.get(c.healthCareDistrict);
         if (!val) {
@@ -34,6 +36,9 @@ export function transform (data, before = '3000') {
                 return false;
             }
             c.infectionDistrict = districts.get(cases.get(c.infectionSource).healthCareDistrict);
+            if (!c.infectionDistrict) {
+                return false;
+            }
             return c.infectionDistrict.id !== c.healthCareDistrict;
         });
 
