@@ -33,7 +33,7 @@ const numCasesSpan = document.getElementById('cases-num');
 const ratioCasesSpan = document.getElementById('cases-ratio');
 const districtNameSpan = document.getElementById('district-name');
 
-fetch('https://w3qa5ydb4l.execute-api.eu-west-1.amazonaws.com/prod/finnishCoronaData').then(r => r.json())
+fetch('https://w3qa5ydb4l.execute-api.eu-west-1.amazonaws.com/prod/finnishCoronaData/v2').then(r => r.json())
 .then(corona => {
     corona.features = topojson.feature(topo, topo.objects.SHP_population).features;
 
